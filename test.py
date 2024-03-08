@@ -21,7 +21,7 @@ html = '''
 </nav> 
 '''
 
-#select() 다가져오는거 selext(one)은 검색된 하나를 가져오는것
+#select() 다가져오는거 selext(one)은 검색된 하나(첫번쨰)를 가져오는것 / 리스트반환
 
 # 모든 일치하는 요소로 접근할 때 사용, 리스트 반환
 #a_tags = soup.select('a')
@@ -39,10 +39,40 @@ html = '''
 #  print(tags.get('href'))
 
 # BeautifulSoup을 사용하여 HTML을 파싱합니다.
-soup = BeautifulSoup(html, 'html.parser')
 
-# find_all
-menu_item_text = soup.find_all('a', class_='menu-item-text')
+# find_all / find 조건으로 검색 + (find)검색된 하나(첫번쨰)엘리먼트로 검색가능 / 리스트반환
+# 해당 엘리먼트의 클래스 이름으로 접근 id를 적는경우에는 아디로 접근
+#menu_item_text = soup.find_all('a', class_='menu-item-text')
 
-for el in menu_item_text:
-  print(el.get('text'))
+
+#for el in menu_item_text:
+#  print(el.get('text'))
+
+# 네이버 뉴스 url
+url = 'https://news.naver.com/section/101'
+
+#지정 웹사이트의 웹 get요청을 보내서
+#리퀘스트를 이용해서 웹페이지에 html 문서 내용 가져오기
+
+response = requests.get(url)
+
+# 웹 페이지의 html 내용을 뷰티폴숩프 객체로 변환
+soup = BeautifulSoup(response.text, 'html.parser')
+
+news_title = soup.find_all('a', class_= 'sa_text_title')
+#print(news_title)
+
+news_title_list = []
+#for title in news_title:
+#  print(title.get_text())
+for title in news_title:
+  news_title_list.append(title.get_text())
+
+# 뉴스 제목 안에 있던 /n 제거하는 코드
+cleanlist = [item.replace('\n', '') for item in news_title_list]
+#print(cleanlist)
+for idx, til in enumerate(cleanlist):
+  print(f"{idx + 1} : {til}")
+#  print(title.get_text())
+
+
