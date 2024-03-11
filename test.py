@@ -1,5 +1,7 @@
 import requests
+import openpyxl
 from bs4 import BeautifulSoup
+import pandas as pd
 
 # 웹페이지 URL
 url = 'https://www.naver.com/'
@@ -58,7 +60,7 @@ response = requests.get(url)
 
 # 웹 페이지의 html 내용을 뷰티폴숩프 객체로 변환
 soup = BeautifulSoup(response.text, 'html.parser')
-
+#--- 데이터 추출 시작 ---
 news_title = soup.find_all('a', class_= 'sa_text_title')
 #print(news_title)
 
@@ -71,8 +73,20 @@ for title in news_title:
 # 뉴스 제목 안에 있던 /n 제거하는 코드
 cleanlist = [item.replace('\n', '') for item in news_title_list]
 #print(cleanlist)
+#이너메레이트에 원하는 인덱스를 뽑아낼 수 있음.
 for idx, til in enumerate(cleanlist):
   print(f"{idx + 1} : {til}")
+  #--- 데이터 추출 끝 ---
 #  print(title.get_text())
 
+#이외에 키워드로 검색도 가능하니 챗피티로 찾아보라
 
+
+# 저장할 데이터를 DataFrame으로 생성합니다. 예를 들어:
+data = {
+    '기사제목': cleanlist,}
+
+df = pd.DataFrame(data)
+
+# 데이터프레임을 엑셀 파일로 저장합니다. 파일명은 'data.xlsx'로 지정합니다.
+df.to_excel('C:\works\python_projects\뉴스_기사.xlsx', index=False)
